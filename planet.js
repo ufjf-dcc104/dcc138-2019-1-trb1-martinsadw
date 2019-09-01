@@ -129,7 +129,7 @@ function updatePlanetCollision(gameState) {
                     shakeIntensity *= 2;
                 }
 
-                player.size += collisionSpeed / player.maxSpeed;
+                player.size -= collisionSpeed / player.maxSpeed;
                 cameraController.currentCamera.cameraShake(shakeDuration, shakeIntensity)
             }
         }

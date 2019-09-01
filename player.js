@@ -94,6 +94,10 @@ function Player(ctx) {
             this.trail[i].add(new V2((Math.random() - 0.5) * trailFloatness, (Math.random() - 0.5) * trailFloatness));
         }
     };
+
+    this.collectFragment = (fragment) => {
+        this.size += fragment.size / 10;
+    }
 }
 
 function simpleControl(gameState) {

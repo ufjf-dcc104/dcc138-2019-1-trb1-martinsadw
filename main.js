@@ -51,6 +51,19 @@ function Game() {
     newPlanet.auraEndColor = "#0000ff00";
     this.gameState.planets.push(newPlanet);
 
+    this.gameState.fragments = [];
+
+    for (let i = 0; i < 50; ++i) {
+        let newFragment = new Fragment();
+        newFragment.pos.x = Math.random() * 150 + 50;
+        newFragment.pos.y = Math.random() * 150 + 50;
+        newFragment.vel.x = Math.random() * 0.03 + 0.01;
+        newFragment.vel.y = Math.random() * -0.2 - 0.1;
+        newFragment.size = Math.random() * 2 + 2;
+        newFragment.shapeIndex = Math.floor(Math.random() * 4);
+        this.gameState.fragments.push(newFragment);
+    }
+
     this.gameState.availableHUD = {
         planetTragectory: true,
         planetGravityInfluence: true,
@@ -120,15 +133,25 @@ function Game() {
         updatePlanetGravity(this.gameState);
         updatePlanetCollision(this.gameState)
 
-        for (let i = 0; i < planets.length; ++i) {
-            let planet = planets[i];
+        for (let i = 0; i < this.gameState.planets.length; ++i) {
+            let planet = this.gameState.planets[i];
             planet.update(this.gameState);
+        }
+        for (let i = 0; i < this.gameState.fragments.length; ++i) {
+            let fragment = this.gameState.fragments[i];
+            fragment.update(this.gameState);
         }
         player.update(this.gameState);
 
-        for (let i = 0; i < planets.length; ++i) {
-            let planet = planets[i];
+        this.gameState.fragments = this.gameState.fragments.filter(filterDestroyedObjects);
+
+        for (let i = 0; i < this.gameState.planets.length; ++i) {
+            let planet = this.gameState.planets[i];
             planet.draw(this.gameState);
+        }
+        for (let i = 0; i < this.gameState.fragments.length; ++i) {
+            let fragment = this.gameState.fragments[i];
+            fragment.draw(this.gameState);
         }
         player.draw(this.gameState);
 
@@ -145,7 +168,7 @@ function Game() {
             camera.pos.y = player.pos.y + 50
         }
 
-        let targetPos = planets[0].pos;
+        let targetPos = this.gameState.planets[0].pos;
         let targetDir = targetPos.clone().sub(camera.pos);
         let targetDistance = targetDir.length();
         targetDir.normalize();
@@ -234,6 +257,10 @@ function Game() {
     }
 
     window.requestAnimationFrame(this.step);
+}
+
+function filterDestroyedObjects(object, index, array) {
+    return !object.shouldDestroy;
 }
 
 let game = new Game();
