@@ -53,7 +53,7 @@ function Game() {
 
     this.gameState.fragments = [];
 
-    for (let i = 0; i < 50; ++i) {
+    for (let i = 0; i < 20; ++i) {
         let newFragment = new Fragment();
         newFragment.pos.x = Math.random() * 150 + 50;
         newFragment.pos.y = Math.random() * 150 + 50;

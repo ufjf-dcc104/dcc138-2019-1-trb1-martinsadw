@@ -100,7 +100,7 @@ function updatePlanetGravity(gameState) {
 }
 
 function updatePlanetCollision(gameState) {
-    let {player, planets, cameraController} = gameState;
+    let {player, planets, fragments, cameraController} = gameState;
 
     let bounceCoefficient = 2
 
@@ -127,6 +127,17 @@ function updatePlanetCollision(gameState) {
                 if (collisionSpeed / player.maxSpeed > 0.9) {
                     shakeDuration *= 2;
                     shakeIntensity *= 2;
+                }
+
+                for (let j = 0; j < 5; ++j) {
+                    let newFragment = new Fragment();
+                    newFragment.pos.x = (Math.random() - 0.5) * 10 + player.pos.x;
+                    newFragment.pos.y = (Math.random() - 0.5) * 10 + player.pos.y;
+                    newFragment.vel.x = -((Math.random() * 0.5) + 0.5) * planetDir.x;
+                    newFragment.vel.y = -((Math.random() * 0.5) + 0.5) * planetDir.y;
+                    newFragment.size = Math.random() * 2 + 2;
+                    newFragment.shapeIndex = Math.floor(Math.random() * 4);
+                    fragments.push(newFragment);
                 }
 
                 player.size -= collisionSpeed / player.maxSpeed;

@@ -4,24 +4,38 @@ function Fragment() {
     this.size = 4;
     this.shapeIndex = 0;
 
+    this.impulse = 6;
+    this.invulnerable = true;
+    this.invulnerabilityDuration = 0.4;
+
     this.shouldDestroy = false;
 
     this.update = (gameState) => {
         let {player} = gameState;
+        let dT = gameState.time - gameState.lastTime;
 
+        if (this.impulse > 0) {
+            this.impulse *= 0.9;
+        }
+        this.impulse = Math.max(0, this.impulse);
+
+        this.invulnerable = false;
+        if (this.invulnerabilityDuration > 0) {
+            this.invulnerable = true;
+            this.invulnerabilityDuration -= dT;
+        }
         let fragmentVector = this.pos.clone().sub(player.pos);
         let fragmentDistance = fragmentVector.length();
         let fragmentDir = fragmentVector.clone().normalize();
         let attraction = fragmentDir.clone().mult(-2);
 
-        if (fragmentDistance > (this.size * 0.5) + 20) {
-            this.pos.add(this.vel);
-        }
-        else {
+        this.pos.add(this.vel.clone().mult(1 + this.impulse));
+
+        if (fragmentDistance < (this.size * 0.5) + 50 && !this.invulnerable) {
             this.pos.add(attraction);
         }
 
-        if (fragmentDistance < (this.size * 0.5) + (player.size * 0.5)) {
+        if (fragmentDistance < (this.size * 0.5) + (player.size * 0.5) && !this.invulnerable) {
             player.collectFragment(this);
             this.destroy();
         }

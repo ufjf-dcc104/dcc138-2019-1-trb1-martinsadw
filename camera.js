@@ -27,7 +27,6 @@ function Camera(ctx) {
     this.shakeIntensity = 0;
     this.shakeDuration = 0;
     this.shake = new V2(0, 0);
-    this.shakeTimeout = 0;
 
     this.update = function(dT) {
         let width = ctx.canvas.width;
