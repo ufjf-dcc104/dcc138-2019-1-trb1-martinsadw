@@ -129,12 +129,18 @@ function updatePlanetCollision(gameState) {
                     shakeIntensity *= 2;
                 }
 
-                for (let j = 0; j < 5; ++j) {
+                for (let j = 0; j < 30; ++j) {
+                    let fragmentPolarDir = planetDir.clone().mult(-1).cartToPolar();
+                    fragmentPolarDir.x = randomRange(0.1, 0.3);
+                    // TODO(andre:2019-09-03): Experimentar uma curva normal
+                    fragmentPolarDir.y += randomRange(-0.2 * Math.PI, 0.2 * Math.PI) + randomRange(-0.2 * Math.PI, 0.2 * Math.PI) + randomRange(-0.2 * Math.PI, 0.2 * Math.PI);
+                    let fragmentDir = fragmentPolarDir.clone().polarToCart();
+
                     let newFragment = new Fragment();
-                    newFragment.pos.x = (Math.random() - 0.5) * 10 + player.pos.x;
-                    newFragment.pos.y = (Math.random() - 0.5) * 10 + player.pos.y;
-                    newFragment.vel.x = -((Math.random() * 0.5) + 0.5) * planetDir.x;
-                    newFragment.vel.y = -((Math.random() * 0.5) + 0.5) * planetDir.y;
+                    newFragment.pos.x = randomRange(-5, 5) + player.pos.x;
+                    newFragment.pos.y = randomRange(-5, 5) + player.pos.y;
+                    newFragment.vel.copy(fragmentDir);
+                    newFragment.impulse = randomRange(15, 30);
                     newFragment.size = Math.random() * 2 + 2;
                     newFragment.shapeIndex = Math.floor(Math.random() * 4);
                     fragments.push(newFragment);

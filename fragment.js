@@ -6,7 +6,7 @@ function Fragment() {
 
     this.impulse = 6;
     this.invulnerable = true;
-    this.invulnerabilityDuration = 0.4;
+    this.invulnerabilityDuration = 0.5;
 
     this.shouldDestroy = false;
 
@@ -15,7 +15,7 @@ function Fragment() {
         let dT = gameState.time - gameState.lastTime;
 
         if (this.impulse > 0) {
-            this.impulse *= 0.9;
+            this.impulse *= 0.95;
         }
         this.impulse = Math.max(0, this.impulse);
 
@@ -27,11 +27,11 @@ function Fragment() {
         let fragmentVector = this.pos.clone().sub(player.pos);
         let fragmentDistance = fragmentVector.length();
         let fragmentDir = fragmentVector.clone().normalize();
-        let attraction = fragmentDir.clone().mult(-2);
+        let attraction = fragmentDir.clone().mult(-4);
 
         this.pos.add(this.vel.clone().mult(1 + this.impulse));
 
-        if (fragmentDistance < (this.size * 0.5) + 50 && !this.invulnerable) {
+        if (fragmentDistance < player.size * 0.75 + 30 && !this.invulnerable) {
             this.pos.add(attraction);
         }
 

@@ -1,3 +1,7 @@
+function randomRange(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 function clamp(min, value, max) {
     return Math.min(Math.max(min, value), max);
 }
