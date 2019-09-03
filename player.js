@@ -7,7 +7,8 @@ function Player(ctx) {
     this.radialAcel = 0.008;
     this.acel = 0.05;
     this.decel = 0.05;
-    this.size = 2;
+    this.mass = 4;
+    this.size = Math.sqrt(this.mass);
     this.segmentDistance = 0.1;
     this.trail = [this.pos.clone()];
 
@@ -23,6 +24,8 @@ function Player(ctx) {
 
     this.update = function(gameState) {
         let {time, input, cameraController, camera, hudCamera} = gameState;
+
+        this.size = Math.sqrt(this.mass);
 
         // simpleControl.bind(this)(gameState);
         radialControl.bind(this)(gameState);
@@ -96,7 +99,7 @@ function Player(ctx) {
     };
 
     this.collectFragment = (fragment) => {
-        this.size += fragment.size / 10;
+        this.mass += fragment.size / 10;
     }
 }
 
