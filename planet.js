@@ -102,24 +102,26 @@ function updatePlanetGravity(gameState) {
 function updatePlanetCollision(gameState) {
     let {player, planets, fragments, cameraController} = gameState;
 
-    let bounceCoefficient = 2
+    let bounceCoefficient = 1
 
     for (let i = 0; i < planets.length; ++i) {
         let planet = planets[i];
 
-        let planetVector = planet.pos.clone().sub(player.pos);
+        let planetVector = player.pos.clone().sub(planet.pos);
         let planetDistance = planetVector.length();
-        let planetDir = planetVector.clone().normalize();
 
-        let collisionSpeed = player.vel.dot(planetDir);
-        if (planetDistance < (planet.size * 0.5) + (player.size * 0.5) && collisionSpeed > 0) {
-            player.vel.x += -planetDir.x * collisionSpeed * bounceCoefficient;
-            player.vel.y += -planetDir.y * collisionSpeed * bounceCoefficient;
+        if (planetDistance < (planet.size * 0.5) + (player.size * 0.5) && player.vel.dot(planetVector) < 0) {
+            let collisionNormal = planetVector.clone().normalize();
+            let collisionPos = collisionNormal.clone().mult(planet.size * 0.5).add(planet.pos);
+            let collisionSpeed = Math.abs(player.vel.dot(collisionNormal));
+
+            player.vel.x += collisionNormal.x * collisionSpeed * (1 + bounceCoefficient);
+            player.vel.y += collisionNormal.y * collisionSpeed * (1 + bounceCoefficient);
 
             console.log("-- collision info:");
-            console.log(collisionSpeed);
-            console.log(player.maxSpeed);
-            console.log(collisionSpeed / player.maxSpeed);
+            console.log("collisionSpeed: " + collisionSpeed);
+            console.log("player.maxSpeed: " + player.maxSpeed);
+            console.log("ratio: " + collisionSpeed / player.maxSpeed);
             if (collisionSpeed / player.maxSpeed > 0.25) {
                 let shakeDuration = 0.1 + (collisionSpeed / player.maxSpeed) * 0.2;
                 let shakeIntensity = 0.25 + (collisionSpeed / player.maxSpeed) * 1.75;
@@ -130,15 +132,15 @@ function updatePlanetCollision(gameState) {
                 }
 
                 for (let j = 0; j < 30; ++j) {
-                    let fragmentPolarDir = planetDir.clone().mult(-1).cartToPolar();
+                    let fragmentPolarDir = collisionNormal.clone().cartToPolar();
                     fragmentPolarDir.x = randomRange(0.1, 0.3);
                     // TODO(andre:2019-09-03): Experimentar uma curva normal
                     fragmentPolarDir.y += randomRange(-0.2 * Math.PI, 0.2 * Math.PI) + randomRange(-0.2 * Math.PI, 0.2 * Math.PI) + randomRange(-0.2 * Math.PI, 0.2 * Math.PI);
                     let fragmentDir = fragmentPolarDir.clone().polarToCart();
 
                     let newFragment = new Fragment();
-                    newFragment.pos.x = randomRange(-5, 5) + player.pos.x;
-                    newFragment.pos.y = randomRange(-5, 5) + player.pos.y;
+                    newFragment.pos.x = randomRange(-5, 5) + collisionPos.x;
+                    newFragment.pos.y = randomRange(-5, 5) + collisionPos.y;
                     newFragment.vel.copy(fragmentDir);
                     newFragment.impulse = randomRange(15, 30);
                     newFragment.size = Math.random() * 2 + 2;
