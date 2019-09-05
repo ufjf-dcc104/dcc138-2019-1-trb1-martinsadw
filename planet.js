@@ -40,7 +40,6 @@ function Planet(ctx) {
         // this.pos.clone(new V2(Math.cos(time) * this.size, Math.sin(time) * this.size))
         this.pos.x = Math.cos(time * 2 * Math.PI / this.orbitDuration + this.orbitPhase) * this.orbitRadius + this.systemCenter.x;
         this.pos.y = Math.sin(time * 2 * Math.PI / this.orbitDuration + this.orbitPhase) * this.orbitRadius + this.systemCenter.y;
-        console.log(this.pos);
     };
 
     this.draw = (gameState) => {

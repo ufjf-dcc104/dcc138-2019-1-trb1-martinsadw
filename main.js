@@ -13,7 +13,7 @@ function Game() {
     this.gameState.player = new Player(this.gameState.ctx);
 
     this.gameState.planets = [];
-    let newPlanet;
+    this.gameState.fragments = [];
 
     for (let i = 0; i < map.systems.length; ++i) {
         let system = map.systems[i];
@@ -39,20 +39,36 @@ function Game() {
 
             this.gameState.planets.push(newPlanet);
         }
+
+        if (system.asteroidBelt) {
+            let asteroidBelt = system.asteroidBelt;
+            for (let j = 0; j < asteroidBelt.quant; ++j) {
+                let polarPos = new V2(randomRange(asteroidBelt.beginRadius, asteroidBelt.endRadius), randomRange(0, 2 * Math.PI));
+                let pos = polarPos.clone().polarToCart();
+                let vel = pos.clone().perp().normalize().mult(randomRange(0.05, 0.1));
+
+                let newFragment = new Fragment();
+                newFragment.pos.x = pos.x;
+                newFragment.pos.y = pos.y;
+                newFragment.vel.x = vel.x;
+                newFragment.vel.y = vel.y;
+                newFragment.size = randomRange(2, 4);
+                newFragment.shapeIndex = Math.floor(Math.random() * 4);
+                this.gameState.fragments.push(newFragment);
+            }
+        }
     }
 
-    this.gameState.fragments = [];
-
-    for (let i = 0; i < 20; ++i) {
-        let newFragment = new Fragment();
-        newFragment.pos.x = Math.random() * 150 + 50;
-        newFragment.pos.y = Math.random() * 150 + 50;
-        newFragment.vel.x = Math.random() * 0.03 + 0.01;
-        newFragment.vel.y = Math.random() * -0.2 - 0.1;
-        newFragment.size = Math.random() * 2 + 2;
-        newFragment.shapeIndex = Math.floor(Math.random() * 4);
-        this.gameState.fragments.push(newFragment);
-    }
+    // for (let i = 0; i < 20; ++i) {
+    //     let newFragment = new Fragment();
+    //     newFragment.pos.x = Math.random() * 150 + 50;
+    //     newFragment.pos.y = Math.random() * 150 + 50;
+    //     newFragment.vel.x = Math.random() * 0.03 + 0.01;
+    //     newFragment.vel.y = Math.random() * -0.2 - 0.1;
+    //     newFragment.size = Math.random() * 2 + 2;
+    //     newFragment.shapeIndex = Math.floor(Math.random() * 4);
+    //     this.gameState.fragments.push(newFragment);
+    // }
 
     this.gameState.availableHUD = {
         planetTragectory: true,
@@ -160,7 +176,7 @@ function Game() {
             camera.pos.y = player.pos.y + 50
         }
 
-        let targetPos = this.gameState.planets[0].pos;
+        let targetPos = this.gameState.planets[1].pos;
         let targetDir = targetPos.clone().sub(camera.pos);
         let targetDistance = targetDir.length();
         targetDir.normalize();
