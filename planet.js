@@ -1,7 +1,10 @@
 function Planet(ctx) {
     this.ctx = ctx;
 
-    this.pos = new V2(158, 158);
+    this.name = "";
+    this.orbitDuration = 100;
+    this.orbitPhase = 0;
+    this.orbitRadius = 500;
     this.strength = 100;
     this.maxStrength = 0.02;
     this.size = 80;
@@ -10,6 +13,9 @@ function Planet(ctx) {
     this.color = "#000000";
     this.auraBeginColor = "#000000ff";
     this.auraEndColor = "#22222200";
+    this.systemCenter = new V2(Math.random() * 10000, Math.random() * 10000);
+
+    this.pos = new V2(0, 0);
 
     this.coreColor = "#000";
     this.auraColor = "#000";
@@ -32,8 +38,9 @@ function Planet(ctx) {
         let {time} = gameState;
 
         // this.pos.clone(new V2(Math.cos(time) * this.size, Math.sin(time) * this.size))
-        this.pos.x = Math.cos(time * this.frequency * 2 * Math.PI + this.phase) * this.size * 5;
-        this.pos.y = Math.sin(time * this.frequency * 2 * Math.PI + this.phase) * this.size * 5;
+        this.pos.x = Math.cos(time * 2 * Math.PI / this.orbitDuration + this.orbitPhase) * this.orbitRadius + this.systemCenter.x;
+        this.pos.y = Math.sin(time * 2 * Math.PI / this.orbitDuration + this.orbitPhase) * this.orbitRadius + this.systemCenter.y;
+        console.log(this.pos);
     };
 
     this.draw = (gameState) => {
@@ -46,7 +53,7 @@ function Planet(ctx) {
             this.ctx.setLineDash([5, 15]);
             this.ctx.beginPath();
             // this.ctx.arc(this.pos.x, this.pos.y, this.size * 5, 0, Math.PI * 2);
-            this.ctx.arc(0, 0, this.size * 5, 0, Math.PI * 2);
+            this.ctx.arc(this.systemCenter.x, this.systemCenter.y, this.orbitRadius, 0, Math.PI * 2);
             this.ctx.stroke();
             this.ctx.setLineDash([]);
         }

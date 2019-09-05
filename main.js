@@ -15,41 +15,31 @@ function Game() {
     this.gameState.planets = [];
     let newPlanet;
 
-    newPlanet = new Planet(this.gameState.ctx);
-    newPlanet.pos = new V2(158, 158);
-    newPlanet.strength = 200;
-    newPlanet.maxStrength = 0.02;
-    newPlanet.size = 80;
-    newPlanet.auraSize = 3;
-    newPlanet.featheringSize = 5;
-    newPlanet.color = "#000000";
-    newPlanet.auraBeginColor = "#000000ff";
-    newPlanet.auraEndColor = "#22222200";
-    this.gameState.planets.push(newPlanet);
+    for (let i = 0; i < map.systems.length; ++i) {
+        let system = map.systems[i];
+        let center = new V2(system.pos.x, system.pos.x);
 
-    newPlanet = new Planet(this.gameState.ctx);
-    newPlanet.pos = new V2(350, -220);
-    newPlanet.strength = 400;
-    newPlanet.maxStrength = 0.05;
-    newPlanet.size = 120;
-    newPlanet.auraSize = 8;
-    newPlanet.featheringSize = 5;
-    newPlanet.color = "#cc2233";
-    newPlanet.auraBeginColor = "#cc229955";
-    newPlanet.auraEndColor = "#cc229900";
-    this.gameState.planets.push(newPlanet);
+        for (let j = 0; j < system.planets.length; ++j) {
+            let planet = system.planets[j];
 
-    newPlanet = new Planet(this.gameState.ctx);
-    newPlanet.pos = new V2(-180, 50);
-    newPlanet.strength = 200;
-    newPlanet.maxStrength = 0.02;
-    newPlanet.size = 60;
-    newPlanet.auraSize = 15;
-    newPlanet.featheringSize = 10;
-    newPlanet.color = "#2255dd";
-    newPlanet.auraBeginColor = "#aaaaff28";
-    newPlanet.auraEndColor = "#0000ff00";
-    this.gameState.planets.push(newPlanet);
+            let newPlanet = new Planet(this.gameState.ctx);
+            newPlanet.name = planet.name;
+            newPlanet.orbitDuration = planet.orbitDuration;
+            newPlanet.orbitPhase = planet.orbitPhase;
+            newPlanet.orbitRadius = planet.orbitRadius;
+            newPlanet.strength = planet.strength;
+            newPlanet.maxStrength = planet.maxStrength;
+            newPlanet.size = planet.size;
+            newPlanet.auraSize = planet.auraSize;
+            newPlanet.featheringSize = planet.featheringSize;
+            newPlanet.color = planet.color;
+            newPlanet.auraBeginColor = planet.auraBeginColor;
+            newPlanet.auraEndColor = planet.auraEndColor;
+            newPlanet.systemCenter = center;
+
+            this.gameState.planets.push(newPlanet);
+        }
+    }
 
     this.gameState.fragments = [];
 
