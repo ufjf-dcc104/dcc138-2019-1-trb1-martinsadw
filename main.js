@@ -1,3 +1,14 @@
+function orbitBehavior(systemCenter, orbitRadius, orbitDuration, orbitPhase) {
+    return function (gameState) {
+        let {time} = gameState;
+
+        if (this.ignoreOrbit) return;
+
+        this.pos.x = Math.cos(time * 2 * Math.PI / orbitDuration + orbitPhase) * orbitRadius + systemCenter.x;
+        this.pos.y = Math.sin(time * 2 * Math.PI / orbitDuration + orbitPhase) * orbitRadius + systemCenter.y;
+    }
+}
+
 function Game() {
     this.gameState = {};
 
@@ -17,7 +28,7 @@ function Game() {
 
     for (let i = 0; i < map.systems.length; ++i) {
         let system = map.systems[i];
-        let center = new V2(system.pos.x, system.pos.x);
+        let systemCenter = new V2(system.pos.x, system.pos.x);
 
         for (let j = 0; j < system.planets.length; ++j) {
             let planet = system.planets[j];
@@ -35,7 +46,7 @@ function Game() {
             newPlanet.color = planet.color;
             newPlanet.auraBeginColor = planet.auraBeginColor;
             newPlanet.auraEndColor = planet.auraEndColor;
-            newPlanet.systemCenter = center;
+            newPlanet.systemCenter = systemCenter;
 
             this.gameState.planets.push(newPlanet);
         }
@@ -52,23 +63,13 @@ function Game() {
                 newFragment.pos.y = pos.y;
                 newFragment.vel.x = vel.x;
                 newFragment.vel.y = vel.y;
-                newFragment.size = randomRange(2, 4);
+                newFragment.size = randomRange(1.2, 2);
                 newFragment.shapeIndex = Math.floor(Math.random() * 4);
+                newFragment.behaviors.push(orbitBehavior(systemCenter, polarPos.x, randomRange(180, 250), polarPos.y))
                 this.gameState.fragments.push(newFragment);
             }
         }
     }
-
-    // for (let i = 0; i < 20; ++i) {
-    //     let newFragment = new Fragment();
-    //     newFragment.pos.x = Math.random() * 150 + 50;
-    //     newFragment.pos.y = Math.random() * 150 + 50;
-    //     newFragment.vel.x = Math.random() * 0.03 + 0.01;
-    //     newFragment.vel.y = Math.random() * -0.2 - 0.1;
-    //     newFragment.size = Math.random() * 2 + 2;
-    //     newFragment.shapeIndex = Math.floor(Math.random() * 4);
-    //     this.gameState.fragments.push(newFragment);
-    // }
 
     this.gameState.availableHUD = {
         planetTragectory: true,

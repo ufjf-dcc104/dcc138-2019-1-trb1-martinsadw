@@ -4,9 +4,9 @@ map = {
             name: "Cevis",
             pos: {x: 0, y: 0},
             asteroidBelt: {
-                quant: 2000,
-                beginRadius: 450,
-                endRadius: 650,
+                quant: 1000,
+                beginRadius: 480,
+                endRadius: 620,
             },
             planets: [
                 {

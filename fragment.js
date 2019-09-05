@@ -9,6 +9,9 @@ function Fragment() {
     this.invulnerabilityDuration = 0.5;
 
     this.shouldDestroy = false;
+    this.ignoreOrbit = false;
+
+    this.behaviors = []
 
     this.update = (gameState) => {
         let {player} = gameState;
@@ -30,9 +33,16 @@ function Fragment() {
         let attraction = fragmentDir.clone().mult(-4);
 
         this.pos.add(this.vel.clone().mult(1 + this.impulse));
+        for (let i = 0; i < this.behaviors.length; ++i) {
+            this.behaviors[i].bind(this)(gameState);
+        }
 
         if (fragmentDistance < player.size * 0.75 + 30 && !this.invulnerable) {
             this.pos.add(attraction);
+            this.ignoreOrbit = true;
+        }
+        else {
+            this.ignoreOrbit = false;
         }
 
         if (fragmentDistance < (this.size * 0.5) + (player.size * 0.5) && !this.invulnerable) {

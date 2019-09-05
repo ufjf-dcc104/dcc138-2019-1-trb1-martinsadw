@@ -79,6 +79,22 @@ function Planet(ctx) {
         this.ctx.beginPath();
         this.ctx.arc(this.pos.x, this.pos.y, this.size * 0.5, 0, Math.PI * 2);
         this.ctx.fill();
+
+        // this.ctx.save();
+        // this.ctx.translate(this.pos.x, this.pos.y);
+        // this.ctx.scale(this.size * 0.5, this.size * 0.5);
+        // this.ctx.lineWidth = 0.04;
+        // this.ctx.beginPath();
+        // this.ctx.moveTo(1, 0);
+        // let x = 1;
+        // let y = 0;
+        // for (let i = 0; i < 10; ++i) {
+        //     x += randomRange(-0.1, 0);
+        //     y += randomRange(-0.1, 0.1);
+        //     this.ctx.lineTo(x, y);
+        // }
+        // this.ctx.stroke();
+        // this.ctx.restore();
     };
 }
 
