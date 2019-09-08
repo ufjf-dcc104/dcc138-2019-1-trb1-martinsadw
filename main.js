@@ -46,6 +46,7 @@ function Game() {
             newPlanet.color = planet.color;
             newPlanet.auraBeginColor = planet.auraBeginColor;
             newPlanet.auraEndColor = planet.auraEndColor;
+            newPlanet.cracksColor = planet.cracksColor;
             newPlanet.systemCenter = systemCenter;
 
             this.gameState.planets.push(newPlanet);

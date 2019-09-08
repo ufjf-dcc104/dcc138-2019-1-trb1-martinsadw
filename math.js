@@ -164,6 +164,39 @@ function angleDiffence(a1, a2) {
     return distance * sign;
 }
 
+function pointOnSegment(p, q, x, y) {
+    return (Math.min(p.x, q.x) <= x && x <= Math.max(p.x, q.x) &&
+            Math.min(p.y, q.y) <= y && y <= Math.max(p.y, q.y));
+}
+
+// https://www.geeksforgeeks.org/program-for-point-of-intersection-of-two-lines/
+function segmentIntersectionPoint(p1, q1, p2, q2)
+{
+    // Line p1q1 represented as a1x + b1y = c1
+    let a1 = q1.y - p1.y;
+    let b1 = p1.x - q1.x;
+    let c1 = a1 * (p1.x) + b1 * (p1.y);
+
+    // Line p2q2 represented as a2x + b2y = c2
+    let a2 = q2.y - p2.y;
+    let b2 = p2.x - q2.x;
+    let c2 = a2 * (p2.x) + b2 * (p2.y);
+
+    let determinant = a1 * b2 - a2 * b1;
+
+    if (determinant != 0)
+    {
+        let x = (b2 * c1 - b1 * c2) / determinant;
+        let y = (a1 * c2 - a2 * c1) / determinant;
+
+        if (pointOnSegment(p1, q1, x, y) && pointOnSegment(p2, q2, x, y))
+            return new V2(x, y);
+        // else
+        //     console.log(a1, b1, c1, a2, b2, c2);
+    }
+    return null;
+}
+
 function V2(x, y) {
     this.x = x;
     this.y = y;

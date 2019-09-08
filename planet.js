@@ -13,6 +13,7 @@ function Planet(ctx) {
     this.color = "#000000";
     this.auraBeginColor = "#000000ff";
     this.auraEndColor = "#22222200";
+    this.cracksColor = "#444444";
     this.systemCenter = new V2(Math.random() * 10000, Math.random() * 10000);
 
     this.pos = new V2(0, 0);
@@ -20,10 +21,12 @@ function Planet(ctx) {
     this.coreColor = "#000";
     this.auraColor = "#000";
 
+    this.cracks = generateFracture();
+
     this.updateColor = () => {
         this.coreColor = ctx.createRadialGradient(this.pos.x, this.pos.y, 0, this.pos.x, this.pos.y, this.size * 0.5)
         this.coreColor.addColorStop(0, this.color);
-        this.coreColor.addColorStop(1 - (this.featheringSize / this.size), this.color);
+        this.coreColor.addColorStop(1 - (this.featheringSize / (this.size * 0.5)), this.color);
         this.coreColor.addColorStop(1, this.color + "00");
 
         this.auraColor = ctx.createRadialGradient(this.pos.x, this.pos.y, this.size * 0.5, this.pos.x, this.pos.y, this.size * 0.5 + this.auraSize);
@@ -69,32 +72,26 @@ function Planet(ctx) {
             this.ctx.stroke();
         }
 
+        // Draw Aura
         this.ctx.fillStyle = this.auraColor;
         this.ctx.beginPath();
         this.ctx.arc(this.pos.x, this.pos.y, this.size * 0.5 + this.auraSize, 0, Math.PI * 2);
         this.ctx.fill();
 
+        // Draw Planet
         // this.ctx.fillStyle = this.color;
         this.ctx.fillStyle = this.coreColor;
         this.ctx.beginPath();
         this.ctx.arc(this.pos.x, this.pos.y, this.size * 0.5, 0, Math.PI * 2);
         this.ctx.fill();
 
-        // this.ctx.save();
-        // this.ctx.translate(this.pos.x, this.pos.y);
-        // this.ctx.scale(this.size * 0.5, this.size * 0.5);
-        // this.ctx.lineWidth = 0.04;
-        // this.ctx.beginPath();
-        // this.ctx.moveTo(1, 0);
-        // let x = 1;
-        // let y = 0;
-        // for (let i = 0; i < 10; ++i) {
-        //     x += randomRange(-0.1, 0);
-        //     y += randomRange(-0.1, 0.1);
-        //     this.ctx.lineTo(x, y);
-        // }
-        // this.ctx.stroke();
-        // this.ctx.restore();
+        // Draw Cracks
+        this.ctx.save();
+        this.ctx.translate(this.pos.x, this.pos.y);
+        this.ctx.scale(this.size * 0.5 - this.featheringSize, this.size * 0.5 - this.featheringSize);
+        ctx.strokeStyle = this.cracksColor;
+        drawFracture(this.ctx, this.cracks);
+        this.ctx.restore();
     };
 }
 
