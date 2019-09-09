@@ -21,7 +21,8 @@ function Planet(ctx) {
     this.coreColor = "#000";
     this.auraColor = "#000";
 
-    this.cracks = generateFracture();
+    // this.cracks = generateFracture();
+    this.cracks = generateFractureList();
 
     this.updateColor = () => {
         this.coreColor = ctx.createRadialGradient(this.pos.x, this.pos.y, 0, this.pos.x, this.pos.y, this.size * 0.5)
@@ -90,7 +91,13 @@ function Planet(ctx) {
         this.ctx.translate(this.pos.x, this.pos.y);
         this.ctx.scale(this.size * 0.5 - this.featheringSize, this.size * 0.5 - this.featheringSize);
         ctx.strokeStyle = this.cracksColor;
-        drawFracture(this.ctx, this.cracks);
+        for (let i = 0; i < this.cracks.length; ++i) {
+            let crack = this.cracks[i];
+            this.ctx.save();
+            this.ctx.rotate(crack.angle);
+            drawFracture(this.ctx, crack.points);
+            this.ctx.restore();
+        }
         this.ctx.restore();
     };
 }

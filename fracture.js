@@ -1,10 +1,28 @@
-function generateFracture() {
+// https://urchn.org/post/moar-cracks
+// http://www.dgp.toronto.edu/~elf/.misc/GI99BlastFract.pdf
+
+function generateFractureList() {
+    fractures = []
+
+    for (let i = 0; i < 6; ++i) {
+        let fractureLength = randomRange(10, 50);
+        fractures.push({
+            points: generateFracture(fractureLength),
+            length: fractureLength,
+            angle: randomRange(-Math.PI, Math.PI),
+        });
+    }
+
+    return fractures;
+}
+
+function generateFracture(size) {
     let fracture = [{childs: 0, length: 0, parent: null, pos: new V2(1, 0)}];
     let parentQueue = [0];
 
     let baseDir = new V2(-1, 0).cartToPolar();
 
-    for (let i = 0; i < 100; ++i) {
+    for (let i = 0; i < size; ++i) {
         let parent;
         if (Math.random() < 0.2) {
             parent = Math.floor(Math.random() * fracture.length)
@@ -32,7 +50,7 @@ function generateFracture() {
         //     newPointDir = basePoint.pos.clone().sub(prevPoint.pos).normalize();
         // }
 
-        newPointDir.x *= randomRange(0.075, 0.15);
+        newPointDir.x *= randomRange(0.1, 0.2);
         // newPointDir.y += randomRange(-1 - basePoint.length * 0.1, 1 + basePoint.length * 0.1);
         newPointDir.y += randomRange(-1.7 + basePoint.length * 0.1, 1.7 - basePoint.length * 0.1);
         // newPointDir.y += randomRange(-1, 1) + randomRange(-1, 1);

@@ -22,7 +22,7 @@ map = {
                     color: "#2255dd",
                     auraBeginColor: "#aaaaff28",
                     auraEndColor: "#0000ff00",
-                    cracksColor: "#4477bb",
+                    cracksColor: "#3366cc",
                 },
                 {
                     name: "Ithars",
@@ -37,7 +37,7 @@ map = {
                     color: "#000000",
                     auraBeginColor: "#000000ff",
                     auraEndColor: "#22222200",
-                    cracksColor: "#333333",
+                    cracksColor: "#111111",
                 },
                 {
                     name: "Zoxenov",
@@ -53,7 +53,7 @@ map = {
                     color: "#cc2233",
                     auraBeginColor: "#cc229955",
                     auraEndColor: "#cc229900",
-                    cracksColor: "#ff5566",
+                    cracksColor: "#ff4455",
                 },
             ],
         },
