@@ -21,8 +21,8 @@ function Planet(ctx) {
     this.coreColor = "#000";
     this.auraColor = "#000";
 
-    // this.cracks = generateFracture();
-    this.cracks = generateFractureList();
+    // this.fractureList = generateFracture();
+    this.fractureList = generateFractureList();
 
     this.updateColor = () => {
         this.coreColor = ctx.createRadialGradient(this.pos.x, this.pos.y, 0, this.pos.x, this.pos.y, this.size * 0.5)
@@ -91,8 +91,8 @@ function Planet(ctx) {
         this.ctx.translate(this.pos.x, this.pos.y);
         this.ctx.scale(this.size * 0.5 - this.featheringSize, this.size * 0.5 - this.featheringSize);
         ctx.strokeStyle = this.cracksColor;
-        for (let i = 0; i < this.cracks.length; ++i) {
-            let crack = this.cracks[i];
+        for (let i = 0; i < this.fractureList.length; ++i) {
+            let crack = this.fractureList[i];
             this.ctx.save();
             this.ctx.rotate(crack.angle);
             drawFracture(this.ctx, crack.points);
@@ -173,6 +173,8 @@ function updatePlanetCollision(gameState) {
                     newFragment.shapeIndex = Math.floor(Math.random() * 4);
                     fragments.push(newFragment);
                 }
+
+                expandFracture(planet.fractureList[Math.floor(Math.random() * planet.fractureList.length)].points, 30);
 
                 player.size -= collisionSpeed / player.maxSpeed;
                 cameraController.currentCamera.cameraShake(shakeDuration, shakeIntensity)
