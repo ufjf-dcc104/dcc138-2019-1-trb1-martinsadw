@@ -21,8 +21,7 @@ function Planet(ctx) {
     this.coreColor = "#000";
     this.auraColor = "#000";
 
-    // this.fractureList = generateFracture();
-    this.fractureList = generateFractureList();
+    this.fractureList = [];
 
     this.updateColor = () => {
         this.coreColor = ctx.createRadialGradient(this.pos.x, this.pos.y, 0, this.pos.x, this.pos.y, this.size * 0.5)
@@ -144,17 +143,21 @@ function updatePlanetCollision(gameState) {
             player.vel.x += collisionNormal.x * collisionSpeed * (1 + bounceCoefficient);
             player.vel.y += collisionNormal.y * collisionSpeed * (1 + bounceCoefficient);
 
+            let collisionPower = collisionSpeed / player.maxSpeed;
+
             console.log("-- collision info:");
             console.log("collisionSpeed: " + collisionSpeed);
             console.log("player.maxSpeed: " + player.maxSpeed);
-            console.log("ratio: " + collisionSpeed / player.maxSpeed);
-            if (collisionSpeed / player.maxSpeed > 0.25) {
-                let shakeDuration = 0.1 + (collisionSpeed / player.maxSpeed) * 0.2;
-                let shakeIntensity = 0.25 + (collisionSpeed / player.maxSpeed) * 1.75;
+            console.log("ratio: " + collisionPower);
+            if (collisionPower > 0.25) {
+                let shakeDuration = 0.1 + collisionPower * 0.2;
+                let shakeIntensity = 0.25 + collisionPower * 1.75;
+                let newFractureSize = collisionPower * 20;
 
-                if (collisionSpeed / player.maxSpeed > 0.9) {
+                if (collisionPower > 0.9) {
                     shakeDuration *= 2;
                     shakeIntensity *= 2;
+                    newFractureSize *= 2;
                 }
 
                 for (let j = 0; j < 30; ++j) {
@@ -180,25 +183,24 @@ function updatePlanetCollision(gameState) {
                     let fracture = planet.fractureList[j];
                     let fractureSize = fracture.points[0].quantChildren;
 
-                    console.log(j);
-                    console.log(angleDiffence(collisionAngle, fracture.angle));
-                    if (Math.abs(angleDiffence(collisionAngle, fracture.angle)) < 0.1) {
+                    let maxDistance = (sigmoid(fractureSize) - 0.5) * 2 * 0.5;
+                    if (Math.abs(angleDiffence(collisionAngle, fracture.angle)) < maxDistance) {
                         collidedFracture = fracture;
                         break;
                     }
                 }
                 if (!collidedFracture) {
-                    collidedFracture = planet.fractureList.push({
+                    planet.fractureList.push({
                         points: expandFracture(null, 1),
-                        length: 1,
                         angle: collisionAngle,
                     });
+                    collidedFracture = planet.fractureList[planet.fractureList.length - 1];
                 }
 
                 // expandFracture(planet.fractureList[Math.floor(Math.random() * planet.fractureList.length)].points, 30);
-                expandFracture(collidedFracture.points, 30);
+                expandFracture(collidedFracture.points, newFractureSize);
 
-                player.size -= collisionSpeed / player.maxSpeed;
+                player.size -= collisionPower;
                 cameraController.currentCamera.cameraShake(shakeDuration, shakeIntensity)
             }
         }

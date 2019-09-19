@@ -1,3 +1,8 @@
+function sigmoid(v) {
+    let lambda = 1;
+    return 1 / (1 + Math.exp(-v * lambda));
+}
+
 function randomRange(min, max) {
     return Math.random() * (max - min) + min;
 }
