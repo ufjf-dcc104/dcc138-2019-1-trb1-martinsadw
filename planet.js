@@ -2,6 +2,7 @@ function Planet(ctx) {
     this.ctx = ctx;
 
     this.name = "";
+    this.health = 20;
     this.orbitDuration = 100;
     this.orbitPhase = 0;
     this.orbitRadius = 500;
@@ -15,6 +16,8 @@ function Planet(ctx) {
     this.auraEndColor = "#22222200";
     this.cracksColor = "#444444";
     this.systemCenter = new V2(Math.random() * 10000, Math.random() * 10000);
+
+    this.shouldDestroy = false;
 
     this.pos = new V2(0, 0);
 
@@ -199,6 +202,27 @@ function updatePlanetCollision(gameState) {
 
                 // expandFracture(planet.fractureList[Math.floor(Math.random() * planet.fractureList.length)].points, 30);
                 expandFracture(collidedFracture.points, newFractureSize);
+
+                planet.health -= collisionPower * 4;
+
+                if (planet.health < 0) {
+                    planet.shouldDestroy = true;
+
+                    for (let j = 0; j < 200; ++j) {
+                        let fragmentPolarDir = new V2(0, 0);
+                        fragmentPolarDir.x = randomRange(0.1, 0.3);
+                        fragmentPolarDir.y = randomRange(0, 2 * Math.PI);
+                        let fragmentDir = fragmentPolarDir.clone().polarToCart();
+
+                        let newFragment = new Fragment();
+                        newFragment.pos.copy(planet.pos);
+                        newFragment.vel.copy(fragmentDir);
+                        newFragment.impulse = randomRange(15, 30);
+                        newFragment.size = Math.random() * 2 + 2;
+                        newFragment.shapeIndex = Math.floor(Math.random() * 4);
+                        fragments.push(newFragment);
+                    }
+                }
 
                 player.size -= collisionPower;
                 cameraController.currentCamera.cameraShake(shakeDuration, shakeIntensity)

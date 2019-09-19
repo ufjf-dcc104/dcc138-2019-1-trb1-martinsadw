@@ -153,6 +153,7 @@ function Game() {
         }
         player.update(this.gameState);
 
+        this.gameState.planets = this.gameState.planets.filter(filterDestroyedObjects);
         this.gameState.fragments = this.gameState.fragments.filter(filterDestroyedObjects);
 
         for (let i = 0; i < this.gameState.planets.length; ++i) {
