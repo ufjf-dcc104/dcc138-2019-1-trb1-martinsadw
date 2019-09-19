@@ -174,7 +174,29 @@ function updatePlanetCollision(gameState) {
                     fragments.push(newFragment);
                 }
 
-                expandFracture(planet.fractureList[Math.floor(Math.random() * planet.fractureList.length)].points, 30);
+                let collisionAngle = collisionNormal.angle();
+                let collidedFracture = null;
+                for (let j = 0; j < planet.fractureList.length; ++j) {
+                    let fracture = planet.fractureList[j];
+                    let fractureSize = fracture.points[0].quantChildren;
+
+                    console.log(j);
+                    console.log(angleDiffence(collisionAngle, fracture.angle));
+                    if (Math.abs(angleDiffence(collisionAngle, fracture.angle)) < 0.1) {
+                        collidedFracture = fracture;
+                        break;
+                    }
+                }
+                if (!collidedFracture) {
+                    collidedFracture = planet.fractureList.push({
+                        points: expandFracture(null, 1),
+                        length: 1,
+                        angle: collisionAngle,
+                    });
+                }
+
+                // expandFracture(planet.fractureList[Math.floor(Math.random() * planet.fractureList.length)].points, 30);
+                expandFracture(collidedFracture.points, 30);
 
                 player.size -= collisionSpeed / player.maxSpeed;
                 cameraController.currentCamera.cameraShake(shakeDuration, shakeIntensity)

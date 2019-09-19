@@ -59,7 +59,7 @@ map = {
         },
         {
             name: "R41N-B0w",
-            pos: {x: 2500, y: 1000},
+            pos: {x: 3500, y: 1700},
             planets: [
                 {
                     name: "R41N-B0w C1",

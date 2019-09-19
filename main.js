@@ -28,7 +28,7 @@ function Game() {
 
     for (let i = 0; i < map.systems.length; ++i) {
         let system = map.systems[i];
-        let systemCenter = new V2(system.pos.x, system.pos.x);
+        let systemCenter = new V2(system.pos.x, system.pos.y);
 
         for (let j = 0; j < system.planets.length; ++j) {
             let planet = system.planets[j];

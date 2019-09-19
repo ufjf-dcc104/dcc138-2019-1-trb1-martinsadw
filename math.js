@@ -202,6 +202,10 @@ function V2(x, y) {
     this.y = y;
 }
 
+V2.prototype.angle = function() {
+    return Math.atan2(this.y, this.x);
+}
+
 V2.prototype.lengthSq = function() {
     return (this.x * this.x) + (this.y * this.y);
 }
@@ -252,7 +256,7 @@ V2.prototype.normalize = function() {
 
 V2.prototype.cartToPolar = function() {
     let r = this.length();
-    let t = Math.atan2(this.y, this.x);
+    let t = this.angle();
     this.x = r;
     this.y = t;
 
