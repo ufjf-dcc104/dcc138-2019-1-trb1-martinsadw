@@ -29,7 +29,7 @@ function Game() {
     this.gameState.hudCamera.isHUD = true;
     this.gameState.camera = new Camera(this.gameState.ctx);
     this.gameState.camera.size = 500;
-    this.gameState.camera.widthHeightRatio = 0;
+    this.gameState.camera.widthHeightRatio = 0.5;
     this.gameState.player = new Player(this.gameState.ctx);
 
     this.gameState.planets = [];
@@ -225,24 +225,27 @@ function Game() {
         }
         player.draw(this.gameState);
 
-        if (camera.pos.x < player.pos.x - camera.size * 0.1) {
-            camera.pos.x = player.pos.x - camera.size * 0.1
+        if (camera.pos.x < player.pos.x - camera.dim.x * 0.1) {
+            camera.pos.x = player.pos.x - camera.dim.x * 0.1
         }
-        if (camera.pos.x > player.pos.x + camera.size * 0.1) {
-            camera.pos.x = player.pos.x + camera.size * 0.1
+        if (camera.pos.x > player.pos.x + camera.dim.x * 0.1) {
+            camera.pos.x = player.pos.x + camera.dim.x * 0.1
         }
-        if (camera.pos.y < player.pos.y - camera.size * 0.1) {
-            camera.pos.y = player.pos.y - camera.size * 0.1
+        if (camera.pos.y < player.pos.y - camera.dim.y * 0.1) {
+            camera.pos.y = player.pos.y - camera.dim.y * 0.1
         }
-        if (camera.pos.y > player.pos.y + camera.size * 0.1) {
-            camera.pos.y = player.pos.y + camera.size * 0.1
+        if (camera.pos.y > player.pos.y + camera.dim.y * 0.1) {
+            camera.pos.y = player.pos.y + camera.dim.y * 0.1
         }
 
-        let scaleP1 = 0;
-        let scaleP2 = 0;
-        let scaleFactor = 100 / Math.log(1 + player.size);
-        // scaleFactor *= 5;
-        camera.size = player.size * scaleFactor;
+        // player.size = 2    // camera.size = 400;
+        // player.size = 40   // camera.size = 2000;
+        // player.size = 120  // camera.size = 3600;
+        // player.size = 400  // camera.size = 8000;
+        // let scaleFactor = 100 / Math.log(1 + player.size);
+        // camera.size = player.size * scaleFactor;
+
+        camera.size = 300 * Math.sqrt(player.size);
 
         let targetPos = this.gameState.planets[1].pos;
         let targetDir = targetPos.clone().sub(camera.pos);
@@ -252,6 +255,11 @@ function Game() {
         markerPos.applyTransform(camera.canvasToPixels());
 
         cameraController.setCamera(hudCamera);
+
+        // ctx.fillRect(camera.dim.x * (0.5 - 0.1) * camera.scale,
+        //              camera.dim.y * (0.5 - 0.1) * camera.scale,
+        //              camera.dim.x * 0.2 * camera.scale,
+        //              camera.dim.y * 0.2 * camera.scale);
 
         ctx.font = "30px sans-serif";
         ctx.fillStyle = "#add";
