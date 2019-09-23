@@ -30,7 +30,7 @@ function Fragment() {
         let fragmentVector = this.pos.clone().sub(player.pos);
         let fragmentDistance = fragmentVector.length();
         let fragmentDir = fragmentVector.clone().normalize();
-        let attraction = fragmentDir.clone().mult(-4);
+        let attraction = fragmentDir.clone().mult(-5);
 
         this.pos.add(this.vel.clone().mult(1 + this.impulse));
         for (let i = 0; i < this.behaviors.length; ++i) {

@@ -9,6 +9,15 @@ function orbitBehavior(systemCenter, orbitRadius, orbitDuration, orbitPhase) {
     }
 }
 
+function attractBehavior(speed) {
+    return function (gameState) {
+        let {player} = gameState;
+
+        this.ignoreOrbit = true;
+        this.vel = player.pos.clone().sub(this.pos).normalize().mult(speed);
+    }
+}
+
 function Game() {
     this.gameState = {};
 
@@ -138,10 +147,60 @@ function Game() {
         ctx.strokeStyle = "#00000033";
         ctx.strokeRect(-500, -500, 1000, 1000);
 
+        ctx.fillStyle = "#80b";
+
+        ctx.beginPath();
+        ctx.arc(1200,   -20,   10 * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(1200,     0,   20 * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(1200,    35,   40 * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(1500,  -180,  120 * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(1500,     0,  200 * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(1500,   320,  400 * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(3000, -1700, 1200 * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(3000,     0, 2000 * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(3000,  3100, 4000 * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+
         this.gameState.input = updateInput(inputConfig);
 
         updatePlanetGravity(this.gameState);
         updatePlanetCollision(this.gameState)
+
+        if (this.gameState.input["debug2"]) {
+            for (let j = 0; j < 15; ++j) {
+                let polarPos = new V2(randomRange(camera.size * 0.15, camera.size * 0.3), randomRange(0, 2 * Math.PI));
+                let pos = polarPos.clone().polarToCart().add(player.pos);
+
+                let newFragment = new Fragment();
+                newFragment.pos.x = pos.x;
+                newFragment.pos.y = pos.y;
+                newFragment.vel.x = 0;
+                newFragment.vel.y = 0;
+                newFragment.size = randomRange(camera.size * 0.004, camera.size * 0.010);
+                newFragment.impulse = 5;
+                newFragment.shapeIndex = Math.floor(Math.random() * 4);
+                newFragment.behaviors.push(attractBehavior(randomRange(camera.size * 0.002, camera.size * 0.004)));
+                this.gameState.fragments.push(newFragment);
+            }
+        }
 
         for (let i = 0; i < this.gameState.planets.length; ++i) {
             let planet = this.gameState.planets[i];
@@ -166,18 +225,24 @@ function Game() {
         }
         player.draw(this.gameState);
 
-        if (camera.pos.x < player.pos.x - 50) {
-            camera.pos.x = player.pos.x - 50
+        if (camera.pos.x < player.pos.x - camera.size * 0.1) {
+            camera.pos.x = player.pos.x - camera.size * 0.1
         }
-        if (camera.pos.x > player.pos.x + 50) {
-            camera.pos.x = player.pos.x + 50
+        if (camera.pos.x > player.pos.x + camera.size * 0.1) {
+            camera.pos.x = player.pos.x + camera.size * 0.1
         }
-        if (camera.pos.y < player.pos.y - 50) {
-            camera.pos.y = player.pos.y - 50
+        if (camera.pos.y < player.pos.y - camera.size * 0.1) {
+            camera.pos.y = player.pos.y - camera.size * 0.1
         }
-        if (camera.pos.y > player.pos.y + 50) {
-            camera.pos.y = player.pos.y + 50
+        if (camera.pos.y > player.pos.y + camera.size * 0.1) {
+            camera.pos.y = player.pos.y + camera.size * 0.1
         }
+
+        let scaleP1 = 0;
+        let scaleP2 = 0;
+        let scaleFactor = 100 / Math.log(1 + player.size);
+        // scaleFactor *= 5;
+        camera.size = player.size * scaleFactor;
 
         let targetPos = this.gameState.planets[1].pos;
         let targetDir = targetPos.clone().sub(camera.pos);

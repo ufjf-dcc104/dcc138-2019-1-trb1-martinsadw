@@ -1,5 +1,5 @@
 var keyboardState = {};
-var trackedKeys = ["w", "a", "s", "d", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+var trackedKeys = ["mouse0", "mouse2", "w", "a", "s", "d", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
 var inputConfig = {
     "vertical": {
         type: "axis",
@@ -10,6 +10,14 @@ var inputConfig = {
         type: "axis",
         positiveKeys: ["d", "ArrowRight"],
         negativeKeys: ["a", "ArrowLeft"],
+    },
+    "debug1": {
+        type: "button",
+        keys: ["mouse0"],
+    },
+    "debug2": {
+        type: "button",
+        keys: ["mouse2"],
     },
 }
 
@@ -25,6 +33,26 @@ document.addEventListener('keydown', function(event) {
     if (event.repeat) return;
 
     var key = event.key;
+    if (trackedKeys.includes(key))
+        keyboardState[key] = true;
+
+    // console.log("Pressed key: " + event.key)
+    updateInput(inputConfig);
+});
+
+document.addEventListener('contextmenu', function(event) { event.preventDefault(); });
+
+document.addEventListener('mouseup', function(event) {
+    var key = "mouse" + event.button;
+    if (trackedKeys.includes(key))
+        keyboardState[key] = false;
+
+    // console.log("Pressed key: " + event.key)
+    updateInput(inputConfig);
+});
+
+document.addEventListener('mousedown', function(event) {
+    var key = "mouse" + event.button;
     if (trackedKeys.includes(key))
         keyboardState[key] = true;
 
@@ -58,6 +86,10 @@ function updateInput(inputConfig) {
 
                 if (checkKeys(description.negativeKeys, keyboardState))
                     input[inputName] -= 1;
+
+                break;
+            case "button":
+                input[inputName] = checkKeys(description.keys, keyboardState);
 
                 break;
             default:

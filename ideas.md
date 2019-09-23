@@ -1,5 +1,9 @@
-- [ ] HUD showing the meteor size
-- [x] HUD showing distance to target
+- HUD
+    - [x] Meteor size
+    - [x] Meteor mass
+    - [x] Distance to target
+    - [x] Time
+    - [x] FPS
 
 - Ranking progression
     - [ ] Meteor
@@ -15,6 +19,13 @@
     - [ ] Meteor Shower
     - [x] Planet tragectory
     - [x] Planet gravity influence
+
+- Special Star Systems
+    - [ ] Pac-Man
+    - [ ] Facebook reactions
+    - [ ] Solar System
+    - [ ] Multiple Star
+    - [ ] Advertising
 
 - Background decoration
     - [ ] Better positioned stars
