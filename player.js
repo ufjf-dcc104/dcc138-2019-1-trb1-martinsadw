@@ -1,7 +1,7 @@
 function Player(ctx) {
     this.ctx = ctx;
 
-    this.pos = new V2(0, -40);
+    this.pos = new V2(0, -1400);
     this.vel = new V2(0.5, 0);
     this.maxSpeed = 4;
     this.radialAcel = 0.008;
@@ -99,7 +99,7 @@ function Player(ctx) {
     };
 
     this.collectFragment = (fragment) => {
-        this.mass += fragment.size / 10;
+        this.mass += (fragment.size * fragment.size) / 10;
     }
 }
 

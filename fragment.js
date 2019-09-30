@@ -37,7 +37,7 @@ function Fragment() {
             this.behaviors[i].bind(this)(gameState);
         }
 
-        if (fragmentDistance < player.size * 0.75 + 30 && !this.invulnerable) {
+        if (fragmentDistance < player.size * 0.8 + 70 && !this.invulnerable) {
             this.pos.add(attraction);
             this.ignoreOrbit = true;
         }

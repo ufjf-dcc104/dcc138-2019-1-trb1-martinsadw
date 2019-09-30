@@ -73,10 +73,36 @@ function Game() {
                 newFragment.pos.y = pos.y;
                 newFragment.vel.x = vel.x;
                 newFragment.vel.y = vel.y;
-                newFragment.size = randomRange(1.2, 2);
+                newFragment.size = asteroidBelt.size * randomRange(0.90, 1.2);
                 newFragment.shapeIndex = Math.floor(Math.random() * 4);
                 newFragment.behaviors.push(orbitBehavior(systemCenter, polarPos.x, randomRange(180, 250), polarPos.y))
                 this.gameState.fragments.push(newFragment);
+            }
+        }
+
+        if (system.star) {
+            switch (system.star.type) {
+                case "single":
+                    let newPlanet = new Planet(this.gameState.ctx);
+                    newPlanet.name = system.star.name;
+                    newPlanet.orbitDuration = 1;
+                    newPlanet.orbitPhase = 0;
+                    newPlanet.orbitRadius = 0;
+                    newPlanet.strength = system.star.strength;
+                    newPlanet.maxStrength = system.star.maxStrength;
+                    newPlanet.size = system.star.size;
+                    newPlanet.auraSize = system.star.auraSize;
+                    newPlanet.featheringSize = system.star.featheringSize;
+                    newPlanet.color = system.star.color;
+                    newPlanet.auraBeginColor = system.star.auraBeginColor;
+                    newPlanet.auraEndColor = system.star.auraEndColor;
+                    newPlanet.cracksColor = system.star.cracksColor;
+                    newPlanet.systemCenter = systemCenter;
+
+                    this.gameState.planets.push(newPlanet);
+                    break;
+                default:
+                    console.warn("Unknown star type");
             }
         }
     }
