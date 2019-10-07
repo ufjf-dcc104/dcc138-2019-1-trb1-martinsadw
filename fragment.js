@@ -2,6 +2,7 @@ function Fragment() {
     this.pos = new V2(100, 100);
     this.vel = new V2(0, 0);
     this.size = 4;
+    this.conversionRate = 1 / 100;
     this.shapeIndex = 0;
 
     this.impulse = 6;
@@ -71,6 +72,10 @@ function Fragment() {
 
     this.destroy = () => {
         this.shouldDestroy = true;
+    }
+
+    this.getResources = () => {
+        return (this.size * this.size) * this.conversionRate;
     }
 }
 

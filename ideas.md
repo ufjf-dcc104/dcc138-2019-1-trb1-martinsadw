@@ -38,3 +38,13 @@
 
 - Bugfix
     - [ ] Curved trail creates weird spikes
+
+- Refactor
+    - [ ] Create type "body"
+    - [ ] Create Behaviors
+        - [ ] Health Behavior
+        - [ ] Orbit Behavior
+        - [ ] Gravity Behavior
+        - [ ] Aura Behavior (?)
+        - [ ] Attract Behavior
+        - [ ] Impulse Behavior

@@ -4,10 +4,10 @@ map = {
             name: "Cevis",
             pos: {x: 0, y: 0},
             asteroidBelt: {
-                quant: 2000,
+                quant: 800,
                 beginRadius: 1700,
                 endRadius: 2200,
-                size: 3,
+                size: 6,
             },
             star: {
                 type: "single",
