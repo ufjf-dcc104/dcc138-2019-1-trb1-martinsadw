@@ -99,7 +99,7 @@ function Player(ctx) {
     };
 
     this.collectFragment = (fragment) => {
-        this.mass += fragment.getResources();
+        this.mass += Math.min(this.mass * 0.02, fragment.getResources());
         // this.mass += (fragment.size * fragment.size) / 100;
     }
 }

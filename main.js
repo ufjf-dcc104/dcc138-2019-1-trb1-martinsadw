@@ -1,23 +1,3 @@
-function orbitBehavior(systemCenter, orbitRadius, orbitDuration, orbitPhase) {
-    return function (gameState) {
-        let {time} = gameState;
-
-        if (this.ignoreOrbit) return;
-
-        this.pos.x = Math.cos(time * 2 * Math.PI / orbitDuration + orbitPhase) * orbitRadius + systemCenter.x;
-        this.pos.y = Math.sin(time * 2 * Math.PI / orbitDuration + orbitPhase) * orbitRadius + systemCenter.y;
-    }
-}
-
-function attractBehavior(speed) {
-    return function (gameState) {
-        let {player} = gameState;
-
-        this.ignoreOrbit = true;
-        this.vel = player.pos.clone().sub(this.pos).normalize().mult(speed);
-    }
-}
-
 function Game() {
     this.gameState = {};
 
@@ -61,6 +41,25 @@ function Game() {
             this.gameState.planets.push(newPlanet);
         }
 
+        // if (system.asteroidBelt) {
+        //     let asteroidBelt = system.asteroidBelt;
+        //     for (let j = 0; j < asteroidBelt.quant; ++j) {
+        //         let polarPos = new V2(randomRange(asteroidBelt.beginRadius, asteroidBelt.endRadius), randomRange(0, 2 * Math.PI));
+        //         let pos = polarPos.clone().polarToCart();
+        //         let vel = pos.clone().perp().normalize().mult(randomRange(0.05, 0.1));
+        //
+        //         let newFragment = new Fragment();
+        //         newFragment.pos.x = pos.x;
+        //         newFragment.pos.y = pos.y;
+        //         newFragment.vel.x = vel.x;
+        //         newFragment.vel.y = vel.y;
+        //         newFragment.size = asteroidBelt.size * randomRange(0.90, 1.2);
+        //         newFragment.shapeIndex = Math.floor(Math.random() * 4);
+        //         newFragment.behaviors.push(orbitBehavior(systemCenter, polarPos.x, randomRange(180, 250), polarPos.y))
+        //         this.gameState.fragments.push(newFragment);
+        //     }
+        // }
+
         if (system.asteroidBelt) {
             let asteroidBelt = system.asteroidBelt;
             for (let j = 0; j < asteroidBelt.quant; ++j) {
@@ -68,14 +67,16 @@ function Game() {
                 let pos = polarPos.clone().polarToCart();
                 let vel = pos.clone().perp().normalize().mult(randomRange(0.05, 0.1));
 
-                let newFragment = new Fragment();
+                let newFragment = new Body();
                 newFragment.pos.x = pos.x;
                 newFragment.pos.y = pos.y;
                 newFragment.vel.x = vel.x;
                 newFragment.vel.y = vel.y;
                 newFragment.size = asteroidBelt.size * randomRange(0.90, 1.2);
-                newFragment.shapeIndex = Math.floor(Math.random() * 4);
-                newFragment.behaviors.push(orbitBehavior(systemCenter, polarPos.x, randomRange(180, 250), polarPos.y))
+
+                newFragment.updateBehaviors.push(orbitBehavior(systemCenter, polarPos.x, randomRange(180, 250), polarPos.y))
+                newFragment.updateBehaviors.push(attractBehavior(5))
+                newFragment.drawBehaviors.push(fragmentDraw(Math.floor(Math.random() * 4)))
                 this.gameState.fragments.push(newFragment);
             }
         }
